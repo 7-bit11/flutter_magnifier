@@ -28,7 +28,13 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on:'),
+          child: RawMagnifier(
+              // maxWidth: 300,
+              // maxHeight: 300,
+              size: Size(300, 300),
+              child: Image.asset(
+                "assets/images/z.jpg",
+              )),
         ),
       ),
     );
