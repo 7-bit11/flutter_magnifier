@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:flutter_magnifier/flutter_magnifier.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,12 +27,14 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: RawMagnifier(
-              // maxWidth: 300,
-              // maxHeight: 300,
-              size: Size(300, 300),
+          child: CustomMagnifier(
+              maxWidth: 300,
+              maxHeight: 300,
               child: Image.asset(
                 "assets/images/z.jpg",
+                fit: BoxFit.cover,
+                width: 300,
+                height: 300,
               )),
         ),
       ),
