@@ -1,0 +1,2 @@
+# flutter_magnifier
+flutter放大镜，类似于淘宝网页端的商品图局部放大效果
