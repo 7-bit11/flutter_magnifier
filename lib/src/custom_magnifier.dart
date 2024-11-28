@@ -44,28 +44,19 @@ class _CustomMagnifierState extends State<CustomMagnifier> {
   }
 
   /// update pointer move event
-  void updatePointerMoveEvent(PointerMoveEvent event) {
+  void _updatePointerMoveEvent(PointerMoveEvent event) {
     _controller.updatePointerMoveEvent(
         event, widget.maxHeight, widget.maxWidth);
-    // setState(() {
-    //   final offsetData = event.localPosition;
-    //   var dy =
-    //       offsetData.dy > widget.maxHeight ? widget.maxHeight : offsetData.dy;
-    //   var dx =
-    //       offsetData.dx > widget.maxWidth ? widget.maxWidth : offsetData.dx;
-    //   dy = dy < 0 ? 0 : dy;
-    //   dx = dx < 0 ? 0 : dx;
-    //   _offset = Offset(dx, dy);
-    // });
   }
 
-  Offset updateMagnifierOffset(double dx, double dy) {
-    var dxOffset = dx - widget.magnifierSize.width;
-    var dyOffset = dy - widget.magnifierSize.height;
-    dyOffset = dyOffset < 0 ? 0 : dyOffset;
-    dxOffset = dxOffset < 0 ? 0 : dxOffset;
-    print("dxOffset:$dxOffset  dyOffset：$dyOffset");
-    return Offset(dxOffset, dyOffset);
+  Offset _updateMagnifierOffset(double dx, double dy) {
+    return _controller.updateMagnifierOffset(dx, dy, widget.magnifierSize);
+  }
+
+  Offset _updateTransformTranslateOffset(
+      {required double dx, required double dy, required Size childSize}) {
+    return _controller.updateTransformTranslateOffset(
+        dx: dx, dy: dy, childSize: childSize);
   }
 
   @override
@@ -77,104 +68,76 @@ class _CustomMagnifierState extends State<CustomMagnifier> {
         alignment: Alignment.center,
         children: [
           widget.child,
-          Positioned.fill(
-            child: LayoutBuilder(
-              builder: (_, BoxConstraints constraints) {
-                final childSize = constraints.biggest;
-                return Listener(
-                  onPointerMove: (event) {
-                    updatePointerMoveEvent(event);
+          ListenableBuilder(
+            listenable: _controller.offset,
+            builder: (BuildContext context, Widget? child) {
+              return Positioned.fill(
+                child: LayoutBuilder(
+                  builder: (_, BoxConstraints constraints) {
+                    final childSize = constraints.biggest;
+                    return Listener(
+                      onPointerMove: (event) {
+                        _updatePointerMoveEvent(event);
+                      },
+                      child: MouseRegion(
+                        child: _controller.offset.value != Offset.zero
+                            ? _buildBox(_controller.offset.value.dx,
+                                _controller.offset.value.dy, childSize)
+                            : null,
+                      ),
+                    );
                   },
-                  child: MouseRegion(
-                    onHover: (event) {
-                      // setState(() => _offset = event.localPosition);
-                      // print("onHover:${_offset}");
-                    },
-                    onExit: (_) => setState(() => _offset = null),
-                    child: _offset != null
-                        ? _buildBox(_offset!.dx, _offset!.dy, childSize)
-                        : null,
-                  ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           )
         ],
       ),
     );
   }
 
-  Offset updateTransformTranslateOffset(
-      {required double dx,
-      required double dy,
-      required Size childSize,
-      required Size magnifierSize}) {
-    var offsetDx = childSize.width / 2 - dx;
-    var offsetDy = childSize.height / 2 - dy;
-    // if (dx >= childSize.width / 2) {
-    //   offsetDx += magnifierSize.width / 2;
-    // } else {
-    //   offsetDx -= magnifierSize.width / 2;
-    // }
-    // if (dy >= childSize.height - magnifierSize.height / 2) {
-    //   offsetDy += magnifierSize.height / 2;
-    // } else {
-    //   offsetDy -= magnifierSize.height / 2;
-    // }
-    print("offsetDx:$offsetDx  offsetDy$offsetDy");
-    return Offset(offsetDx, offsetDy);
-  }
-
   Widget _buildBox(double dx, double dy, Size childSize) {
-    return ListenableBuilder(
-      listenable: _controller.offset ?? ValueNotifier(Offset.zero),
-      builder: (BuildContext context, Widget? child) {
-        return Transform.translate(
-          offset: updateMagnifierOffset(dx, dy),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Stack(
-              children: [
-                SizedBox(
-                  width: widget.magnifierSize.width,
-                  height: widget.magnifierSize.height,
-                  child: ClipRect(
-                    child: Transform.scale(
-                      scale: widget.magnification,
-                      child: Transform.translate(
-                        offset: updateTransformTranslateOffset(
-                            dx: dx,
-                            dy: dy,
-                            childSize: childSize,
-                            magnifierSize: widget.magnifierSize),
-                        child: OverflowBox(
-                          minWidth:
-                              childSize.width + widget.magnifierSize.width / 2,
-                          maxWidth:
-                              childSize.width + widget.magnifierSize.width / 2,
-                          minHeight:
-                              childSize.height + widget.magnifierSize.width / 2,
-                          maxHeight:
-                              childSize.height + widget.magnifierSize.width / 2,
-                          child: widget.child,
-                        ),
-                      ),
+    return Transform.translate(
+      offset: _updateMagnifierOffset(dx, dy),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Stack(
+          children: [
+            SizedBox(
+              width: widget.magnifierSize.width,
+              height: widget.magnifierSize.height,
+              child: ClipRect(
+                child: Transform.scale(
+                  scale: widget.magnification,
+                  child: Transform.translate(
+                    offset: _updateTransformTranslateOffset(
+                        dx: dx, dy: dy, childSize: childSize),
+                    child: OverflowBox(
+                      minWidth:
+                          childSize.width + widget.magnifierSize.width / 2,
+                      maxWidth:
+                          childSize.width + widget.magnifierSize.width / 2,
+                      minHeight:
+                          childSize.height + widget.magnifierSize.width / 2,
+                      maxHeight:
+                          childSize.height + widget.magnifierSize.width / 2,
+                      child: widget.child,
                     ),
                   ),
                 ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 2),
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        );
-      },
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 2),
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

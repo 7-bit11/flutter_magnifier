@@ -19,6 +19,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  CustomMagnifierController controller = CustomMagnifierController();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,9 +27,12 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          controller.reset();
+        }),
         body: Center(
           child: CustomMagnifier(
-              controller: CustomMagnifierController(),
+              controller: controller,
               maxWidth: 400,
               maxHeight: 300,
               child: Image.asset(
