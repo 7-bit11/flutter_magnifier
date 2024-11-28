@@ -1,7 +1,5 @@
 // ignore_for_file: use_super_parameters, library_private_types_in_public_api
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class CustomMagnifier extends StatefulWidget {
@@ -45,6 +43,7 @@ class _CustomMagnifierState extends State<CustomMagnifier> {
     var dyOffset = dy - widget.magnifierSize.height;
     dyOffset = dyOffset < 0 ? 0 : dyOffset;
     dxOffset = dxOffset < 0 ? 0 : dxOffset;
+    print("dxOffset:$dxOffset  dyOffset：$dyOffset");
     return Offset(dxOffset, dyOffset);
   }
 
@@ -84,6 +83,27 @@ class _CustomMagnifierState extends State<CustomMagnifier> {
     );
   }
 
+  Offset updateTransformTranslateOffset(
+      {required double dx,
+      required double dy,
+      required Size childSize,
+      required Size magnifierSize}) {
+    var offsetDx = childSize.width / 2 - dx;
+    var offsetDy = childSize.height / 2 - dy;
+    // if (dx >= childSize.width / 2) {
+    //   offsetDx += magnifierSize.width / 2;
+    // } else {
+    //   offsetDx -= magnifierSize.width / 2;
+    // }
+    // if (dy >= childSize.height - magnifierSize.height / 2) {
+    //   offsetDy += magnifierSize.height / 2;
+    // } else {
+    //   offsetDy -= magnifierSize.height / 2;
+    // }
+    print("offsetDx:$offsetDx  offsetDy$offsetDy");
+    return Offset(offsetDx, offsetDy);
+  }
+
   Widget _buildBox(double dx, double dy, Size childSize) {
     return Transform.translate(
       offset: updateMagnifierOffset(dx, dy),
@@ -98,15 +118,20 @@ class _CustomMagnifierState extends State<CustomMagnifier> {
                 child: Transform.scale(
                   scale: widget.magnification,
                   child: Transform.translate(
-                    offset: Offset(
-                      childSize.width / 2 - dx,
-                      childSize.height / 2 - dy,
-                    ),
+                    offset: updateTransformTranslateOffset(
+                        dx: dx,
+                        dy: dy,
+                        childSize: childSize,
+                        magnifierSize: widget.magnifierSize),
                     child: OverflowBox(
-                      minWidth: childSize.width,
-                      maxWidth: childSize.width,
-                      minHeight: childSize.height,
-                      maxHeight: childSize.height,
+                      minWidth:
+                          childSize.width + widget.magnifierSize.width / 2,
+                      maxWidth:
+                          childSize.width + widget.magnifierSize.width / 2,
+                      minHeight:
+                          childSize.height + widget.magnifierSize.width / 2,
+                      maxHeight:
+                          childSize.height + widget.magnifierSize.width / 2,
                       child: widget.child,
                     ),
                   ),

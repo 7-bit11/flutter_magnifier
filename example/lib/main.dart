@@ -28,12 +28,12 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: CustomMagnifier(
-              maxWidth: 300,
+              maxWidth: 400,
               maxHeight: 300,
               child: Image.asset(
                 "assets/images/z.jpg",
                 fit: BoxFit.cover,
-                width: 300,
+                width: 400,
                 height: 300,
               )),
         ),
