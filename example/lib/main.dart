@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
               controller: controller,
               maxWidth: 400,
               maxHeight: 300,
+              magnification: 2,
               child: Image.asset(
                 "assets/images/z.jpg",
                 fit: BoxFit.cover,

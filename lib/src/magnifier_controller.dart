@@ -38,4 +38,10 @@ class CustomMagnifierController extends ChangeNotifier {
     offset.value = Offset.zero;
     notifyListeners();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    offset.dispose();
+  }
 }
