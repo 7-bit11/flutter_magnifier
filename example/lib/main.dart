@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: CustomMagnifier(
+              controller: CustomMagnifierController(),
               maxWidth: 400,
               maxHeight: 300,
               child: Image.asset(
