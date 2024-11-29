@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 class CustomMagnifierController extends ChangeNotifier {
   CustomMagnifierController();
-
   ValueNotifier<Offset> offset = ValueNotifier(Offset.zero);
 
   /// update pointer move event

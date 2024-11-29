@@ -35,7 +35,6 @@ class CustomMagnifier extends StatefulWidget {
 }
 
 class _CustomMagnifierState extends State<CustomMagnifier> {
-  Offset? _offset;
   late CustomMagnifierController _controller;
   @override
   void initState() {
