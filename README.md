@@ -1,5 +1,5 @@
 # flutter_magnifier
-flutter放大镜，可以放大屏幕内任意位置的内容。
+flutter放大镜，可以放大组件内任意位置。
 
 
 ### 效果展示
