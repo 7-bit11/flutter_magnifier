@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
               //       ),
               //       size: Size(100, 100),
               //       magnificationScale: 3,
-              //     ),
+              //     ),Magnifier()
               //   ],
               // ),
 
@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
                   maxWidth: 400,
                   maxHeight: 300,
                   magnification: 2,
-                  magnifierType: MagnifierType.magnifierWithCircle,
+                  magnifierType: MagnifierType.magnifierRectangle,
                   child: Image.asset(
                     "assets/images/z.jpg",
                     fit: BoxFit.cover,
