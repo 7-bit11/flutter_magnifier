@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_magnifier/src/magnifier_controller.dart';
 
+enum MagnifierType { magnifierRectangle, magnifierWithCircle }
+
 class CustomMagnifier extends StatefulWidget {
   /// 子组件
   final Widget child;
@@ -20,6 +22,8 @@ class CustomMagnifier extends StatefulWidget {
   final Size magnifierSize;
 
   final CustomMagnifierController controller;
+
+  final MagnifierType magnifierType;
   const CustomMagnifier({
     Key? key,
     required this.child,
@@ -28,6 +32,7 @@ class CustomMagnifier extends StatefulWidget {
     required this.maxHeight,
     this.magnifierSize = const Size(100, 100),
     required this.controller,
+    this.magnifierType = MagnifierType.magnifierRectangle,
   }) : super(key: key);
 
   @override
@@ -105,7 +110,11 @@ class _CustomMagnifierState extends State<CustomMagnifier> {
             SizedBox(
               width: widget.magnifierSize.width,
               height: widget.magnifierSize.height,
-              child: ClipRect(
+              child: ClipRRect(
+                borderRadius:
+                    widget.magnifierType == MagnifierType.magnifierWithCircle
+                        ? BorderRadius.circular(childSize.width / 2)
+                        : BorderRadius.zero,
                 child: Transform.scale(
                   scale: widget.magnification,
                   child: Transform.translate(
@@ -129,6 +138,10 @@ class _CustomMagnifierState extends State<CustomMagnifier> {
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
+                  shape:
+                      widget.magnifierType == MagnifierType.magnifierWithCircle
+                          ? BoxShape.circle
+                          : BoxShape.rectangle,
                   border: Border.all(color: Colors.black, width: 2),
                   color: Colors.transparent,
                 ),

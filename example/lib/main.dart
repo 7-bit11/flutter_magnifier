@@ -31,17 +31,35 @@ class _MyAppState extends State<MyApp> {
           controller.reset();
         }),
         body: Center(
-          child: CustomMagnifier(
-              controller: controller,
-              maxWidth: 400,
-              maxHeight: 300,
-              magnification: 2,
-              child: Image.asset(
-                "assets/images/z.jpg",
-                fit: BoxFit.cover,
-                width: 400,
-                height: 300,
-              )),
+          child:
+              // Stack(
+              //   alignment: Alignment.center,
+              //   children: <Widget>[
+              //     Image.asset('assets/images/z.jpg'),
+              //     RawMagnifier(
+              //       decoration: const MagnifierDecoration(
+              //         shape: CircleBorder(
+              //           side: BorderSide(color: Colors.blue, width: 2),
+              //         ),
+              //       ),
+              //       size: Size(100, 100),
+              //       magnificationScale: 3,
+              //     ),
+              //   ],
+              // ),
+
+              CustomMagnifier(
+                  controller: controller,
+                  maxWidth: 400,
+                  maxHeight: 300,
+                  magnification: 2,
+                  magnifierType: MagnifierType.magnifierWithCircle,
+                  child: Image.asset(
+                    "assets/images/z.jpg",
+                    fit: BoxFit.cover,
+                    width: 400,
+                    height: 300,
+                  )),
         ),
       ),
     );
